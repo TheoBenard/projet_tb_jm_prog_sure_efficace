@@ -1,10 +1,9 @@
 [package]
-name = "Projet_TB_JM_ProgSureEfficace"
+name = "projet_tb_jm_prog_sure_efficace"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = "0.11"
-
+gtk = "0.9"
