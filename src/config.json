@@ -1,0 +1,24 @@
+{
+  "game_modes": [
+    {
+      "name": "Small",
+      "board_size": 8,
+      "num_mines": 10
+    },
+    {
+      "name": "Medium",
+      "board_size": 16,
+      "num_mines": 40
+    },
+    {
+      "name": "Large",
+      "board_size": 32,
+      "num_mines": 160
+    },
+    {
+      "name": "Xtreme",
+      "board_size": 16,
+      "num_mines": 246
+    }
+  ]
+}

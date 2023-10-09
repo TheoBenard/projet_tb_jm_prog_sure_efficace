@@ -1,4 +1,5 @@
 mod display;
+mod utils;
 
 extern crate rand;
 
@@ -9,7 +10,7 @@ use rand::Rng;
 //use std::time::{Instant, Duration};
 //use std::thread;
 
-const BOARD_SIZE: usize = 5;
+const BOARD_SIZE: usize = 8;
 const NUM_MINES: usize = 10;
 //const FIRST_PLAY: bool = false;
 
