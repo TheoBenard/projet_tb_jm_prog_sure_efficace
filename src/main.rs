@@ -1,3 +1,5 @@
+mod display;
+
 extern crate rand;
 
 use std::collections::HashSet;
@@ -11,7 +13,7 @@ const BOARD_SIZE: usize = 8;
 const NUM_MINES: usize = 10;
 //const FIRST_PLAY: bool = false;
 
-struct Minesweeper {
+pub struct Minesweeper {
     board: Vec<Vec<Cell>>,
     mines: HashSet<(usize, usize)>,
     revealed: HashSet<(usize, usize)>,
@@ -33,7 +35,7 @@ impl Minesweeper {
         let mut board = vec![vec![Cell::Undiscovered; BOARD_SIZE]; BOARD_SIZE];
         let mut mines = HashSet::new();
         let mut rng = rand::thread_rng();
-    
+
         while mines.len() < NUM_MINES {
             let row = rng.gen_range(0..BOARD_SIZE);
             let col = rng.gen_range(0..BOARD_SIZE);
@@ -42,7 +44,7 @@ impl Minesweeper {
                 board[row][col] = Cell::Mine;
             }
         }
-    
+
         Minesweeper {
             board,
             mines,
@@ -51,53 +53,7 @@ impl Minesweeper {
             num_mark: 0,
         }
     }
-    
-    
-    fn print_board(&self) {
-        // on efface l'écran en utilisant crossterm
-        if let Err(err) = crossterm::execute!(
-            io::stdout(),
-            crossterm::terminal::Clear(crossterm::terminal::ClearType::All)
-        ) {
-            eprintln!("Erreur lors de l'effacement de l'écran : {}", err);
-        }
-        
-        // on affiche le jeu
-        println!("   Minesweeper game \n");
-        let mut row_count = 0;
-        print!("   0 1 2 3 4 5 6 7\n");
-        for row in &self.board {
-            print!("{}  ", row_count);
-            for col in 0..BOARD_SIZE {
-                let cell = &row[col];
-                if self.game_over || self.revealed.contains(&(row_count, col)) {
-                    match cell {
-                        Cell::Undiscovered => print!(". "),
-                        Cell::Number(num) => print!("{} ", num),
-                        Cell::Mine => {
-                            if self.game_over {
-                                print!("X ");
-                            } else {
-                                print!(". "); // on cache les mines non révélées
-                            }
-                        }
-                        Cell::Empty => print!("* "),
-                        Cell::Mark => print!("! "),
-                    }
-                } else {
-                    print!(". "); // on cache les mines non révélées
-                }        
-            }
-            if row_count == 2 {
-                print!("    Drapeau {}/{} ",self.num_mark, NUM_MINES)
-            }
-            // TODO : créer une fonction pour centrer ces info par rapport à la grille
-            println!();
-            row_count += 1;
-        }
-        println!();
-    }
-    
+
     fn check_win(&self) -> bool {
         let num_cells = BOARD_SIZE * BOARD_SIZE;
         let num_revealed = self.revealed.len();
@@ -107,23 +63,21 @@ impl Minesweeper {
     }
 
     fn reveal(&mut self, row: usize, col: usize) {
-        println!("test 1");
         if row >= BOARD_SIZE || col >= BOARD_SIZE {
             return;
         }
 
         if self.revealed.contains(&(row, col)){
-            println!("test 2");
             // TODO : modifier la variable d'erreur qui sera affiché au joueur
             return;
         }
-        println!("test 3");
+        
         // TODO : créer une fonction "check_game_over" comme pour "check_win" ?
         if self.mines.contains(&(row, col)) {
             self.game_over = true;
             return;
         }
-        
+
         let mines_around = self.count_mines_around(row, col);
         self.revealed.insert((row, col));
         
@@ -194,7 +148,7 @@ impl Minesweeper {
         while !self.game_over && !self.check_win() {
             
             // on affiche le démineur
-             self.print_board();
+             display::print_board(self);
 
             // on récupère la saisie du joueur
             println!("Enter row and column (e.g., '24') or mark a mine (e.g., '33!') :");
@@ -269,7 +223,7 @@ impl Minesweeper {
         }
         
         if self.game_over {
-            self.print_board();
+            display::print_board(self);
             println!("Game Over! You hit a mine.");
         } else {
             println!("Congratulations! You won!");
