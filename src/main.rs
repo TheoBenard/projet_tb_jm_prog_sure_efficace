@@ -7,7 +7,7 @@ use rand::Rng;
 //use std::time::{Instant, Duration};
 //use std::thread;
 
-const BOARD_SIZE: usize = 8;
+const BOARD_SIZE: usize = 5;
 const NUM_MINES: usize = 10;
 //const FIRST_PLAY: bool = false;
 
@@ -17,9 +17,10 @@ struct Minesweeper {
     revealed: HashSet<(usize, usize)>,
     game_over: bool,
     num_mark: usize,
+    first_play: bool,
 }
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Cell {
     Mine,
     Number(u8),
@@ -30,28 +31,17 @@ enum Cell {
 
 impl Minesweeper {
     fn new() -> Self {
-        let mut board = vec![vec![Cell::Undiscovered; BOARD_SIZE]; BOARD_SIZE];
-        let mut mines = HashSet::new();
-        let mut rng = rand::thread_rng();
-    
-        while mines.len() < NUM_MINES {
-            let row = rng.gen_range(0..BOARD_SIZE);
-            let col = rng.gen_range(0..BOARD_SIZE);
-            if !mines.contains(&(row, col)) {
-                mines.insert((row, col));
-                board[row][col] = Cell::Mine;
-            }
-        }
-    
+        let board = vec![vec![Cell::Undiscovered; BOARD_SIZE]; BOARD_SIZE];
+
         Minesweeper {
             board,
-            mines,
+            mines: HashSet::new(),
             revealed: HashSet::new(),
             game_over: false,
             num_mark: 0,
+            first_play: false,
         }
     }
-    
     
     fn print_board(&self) {
         // on efface l'écran en utilisant crossterm
@@ -107,17 +97,15 @@ impl Minesweeper {
     }
 
     fn reveal(&mut self, row: usize, col: usize) {
-        println!("test 1");
         if row >= BOARD_SIZE || col >= BOARD_SIZE {
             return;
         }
 
         if self.revealed.contains(&(row, col)){
-            println!("test 2");
             // TODO : modifier la variable d'erreur qui sera affiché au joueur
             return;
         }
-        println!("test 3");
+
         // TODO : créer une fonction "check_game_over" comme pour "check_win" ?
         if self.mines.contains(&(row, col)) {
             self.game_over = true;
@@ -133,6 +121,7 @@ impl Minesweeper {
         };
 
         if mines_around == 0 {
+            println!("mines around = 0 coordonnées : {:?}, {:?}", row, col);
             for r in row.saturating_sub(1)..=row + 1 {
                 for c in col.saturating_sub(1)..=col + 1 {
                     self.reveal(r, c);
@@ -215,9 +204,34 @@ impl Minesweeper {
                         (chars[0].to_digit(BOARD_SIZE as u32), 
                         chars[1].to_digit(BOARD_SIZE as u32)) {
 
-                    //println!("first : {}", row);
-                    //println!("second : {}", col);
-                    self.reveal(row as usize, col as usize)
+                    if !self.first_play {
+                        // TODO mettre tout ça dans une fonction
+                        // Place mines around the first selected cell
+                        let mut rng = rand::thread_rng();
+                        while self.mines.len() < NUM_MINES {
+                            let random_row = rng.gen_range(0..BOARD_SIZE);
+                            let random_col = rng.gen_range(0..BOARD_SIZE);
+                            
+                            let is_adjacent = (random_row as isize - row as isize).abs() <= 1
+                            && (random_col as isize - col as isize).abs() <= 1;
+
+                            if !is_adjacent && !self.revealed.contains(&(random_row, random_col)) {
+                                self.mines.insert((random_row, random_col));
+                                self.board[random_row][random_col] = Cell::Mine;
+                            }
+                        }
+                        
+                        for r in row.saturating_sub(1)..=row + 1 {
+                            for c in col.saturating_sub(1)..=col + 1 {
+                                self.reveal(r as usize, c as usize); 
+                            }
+                        }
+
+                        self.first_play = true;
+                        
+                    } else {
+                        self.reveal(row as usize, col as usize);
+                    }   
                 }
             } else if num_chars == 4 && chars[2] == '!' && chars[3] == '\n' { 
                 // si l'entrée standard contient 4 caractères
@@ -225,8 +239,6 @@ impl Minesweeper {
                         (chars[0].to_digit(BOARD_SIZE as u32), 
                         chars[1].to_digit(BOARD_SIZE as u32)) {
 
-                    //println!("first : {}", row);
-                    //println!("second : {}", col);
                     self.mark_mine(row as usize, col as usize);
                 }
             } else {
