@@ -9,7 +9,7 @@ use rand::Rng;
 
 const BOARD_SIZE: usize = 8;
 const NUM_MINES: usize = 10;
-const FIRST_PLAY: bool = false;
+//const FIRST_PLAY: bool = false;
 
 struct Minesweeper {
     board: Vec<Vec<Cell>>,
@@ -31,25 +31,27 @@ enum Cell {
 impl Minesweeper {
     fn new() -> Self {
         let mut board = vec![vec![Cell::Undiscovered; BOARD_SIZE]; BOARD_SIZE];
-         let mut mines = HashSet::new();
-         let mut rng = rand::thread_rng();
-        // let num_mark: usize = 0;
-
+        let mut mines = HashSet::new();
+        let mut rng = rand::thread_rng();
+    
         while mines.len() < NUM_MINES {
             let row = rng.gen_range(0..BOARD_SIZE);
             let col = rng.gen_range(0..BOARD_SIZE);
-            mines.insert((row, col));
-            board[row][col] = Cell::Mine;
+            if !mines.contains(&(row, col)) {
+                mines.insert((row, col));
+                board[row][col] = Cell::Mine;
+            }
         }
-
+    
         Minesweeper {
             board,
-            mines: HashSet::new(),
+            mines,
             revealed: HashSet::new(),
             game_over: false,
             num_mark: 0,
         }
     }
+    
     
     fn print_board(&self) {
         // on efface l'écran en utilisant crossterm
@@ -105,21 +107,23 @@ impl Minesweeper {
     }
 
     fn reveal(&mut self, row: usize, col: usize) {
+        println!("test 1");
         if row >= BOARD_SIZE || col >= BOARD_SIZE {
             return;
         }
 
         if self.revealed.contains(&(row, col)){
+            println!("test 2");
             // TODO : modifier la variable d'erreur qui sera affiché au joueur
             return;
         }
-        
+        println!("test 3");
         // TODO : créer une fonction "check_game_over" comme pour "check_win" ?
         if self.mines.contains(&(row, col)) {
             self.game_over = true;
             return;
         }
-
+        
         let mines_around = self.count_mines_around(row, col);
         self.revealed.insert((row, col));
         
