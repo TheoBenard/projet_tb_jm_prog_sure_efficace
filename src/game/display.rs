@@ -1,7 +1,7 @@
 use std::io;
 use termion::{color, style};
 
-use crate::game::{Cell, Minesweeper, BOARD_SIZE};
+use crate::game::{Cell, Minesweeper, BOARD_SIZE, NUM_MINES};
 
 pub fn print_board(minesweeper_info: &Minesweeper) {
 
@@ -73,7 +73,7 @@ pub fn print_board(minesweeper_info: &Minesweeper) {
             }
         }
         if row_count == 2 {
-            print!("    Drapeau {}/{} ",minesweeper_info.num_mark, 10)
+            print!("    Drapeau {}/{} ",minesweeper_info.num_mark, NUM_MINES)
         }
         // TODO : créer une fonction pour centrer ces info par rapport à la grille
         println!();

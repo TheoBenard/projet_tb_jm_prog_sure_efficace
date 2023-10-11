@@ -6,8 +6,8 @@ use rand::Rng;
 
 mod display;
 
-const BOARD_SIZE: usize = 8;
-const NUM_MINES: usize = 10;
+const BOARD_SIZE: usize = 20;
+const NUM_MINES: usize = 20;
 
 pub struct Minesweeper {
     board: Vec<Vec<Cell>>,
