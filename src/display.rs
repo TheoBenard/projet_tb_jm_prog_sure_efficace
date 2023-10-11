@@ -2,6 +2,7 @@ use std::io;
 
 use crate::{Cell, Minesweeper};
 use crate::BOARD_SIZE;
+use crate::NUM_MINES;
 
 pub fn print_board(minesweeper_info: &mut Minesweeper) {
 
@@ -21,20 +22,20 @@ pub fn print_board(minesweeper_info: &mut Minesweeper) {
                     Cell::Number(num) => print!("{} ", num),
                     Cell::Mine => {
                         if minesweeper_info.game_over {
-                            print!("X ");
+                            print!("\u{1F4A3}");
                         } else {
                             print!(". "); // on cache les mines non révélées
                         }
                     }
                     Cell::Empty => print!("* "),
-                    Cell::Mark => print!("! "),
+                    Cell::Mark => print!("\u{1F3F4}"),
                 }
             } else {
                 print!(". "); // on cache les mines non révélées
             }
         }
         if row_count == 2 {
-            print!("    Drapeau {}/{} ",minesweeper_info.num_mark, 10)
+            print!("    Drapeau {}/{} ",minesweeper_info.num_mark, NUM_MINES)
         }
         // TODO : créer une fonction pour centrer ces info par rapport à la grille
         println!();
