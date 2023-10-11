@@ -1,3 +1,4 @@
+/*
 use crate::{game::Minesweeper};
 use crate::BOARD_SIZE;
 use crate::NUM_MINES;
@@ -9,3 +10,5 @@ pub fn check_win(minesweeper_info: &mut Minesweeper) -> bool {
 
     num_revealed == num_safe_cells
 }
+
+ */
