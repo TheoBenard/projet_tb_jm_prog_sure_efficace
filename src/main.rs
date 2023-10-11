@@ -10,7 +10,7 @@ use rand::Rng;
 //use std::thread;
 
 const BOARD_SIZE: usize = 5;
-const NUM_MINES: usize = 10;
+const NUM_MINES: usize = 5;
 //const FIRST_PLAY: bool = false;
 
 pub struct Minesweeper {
@@ -45,11 +45,7 @@ impl Minesweeper {
         }
     }
     fn check_win(&self) -> bool {
-        let num_cells = BOARD_SIZE * BOARD_SIZE;
-        let num_revealed = self.revealed.len();
-        let num_safe_cells = num_cells - NUM_MINES;
-
-        num_revealed == num_safe_cells
+        self.revealed.len() - self.num_mark  == (BOARD_SIZE * BOARD_SIZE) - NUM_MINES
     }
 
     fn reveal(&mut self, row: usize, col: usize) {
