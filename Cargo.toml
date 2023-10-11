@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 rand = "0.8"  # Pour la génération de nombres aléatoires
 crossterm = "0.27.0"
+termion = "1.5"
