@@ -1,28 +1,52 @@
 use std::io;
 use termion::{color, style};
 
-use crate::{Cell, Minesweeper};
-use crate::BOARD_SIZE;
-use crate::NUM_MINES;
+use crate::game::{Cell, Minesweeper, BOARD_SIZE};
 
-pub fn print_board(minesweeper_info: &mut Minesweeper) {
+pub fn print_board(minesweeper_info: &Minesweeper) {
 
     clean_screen();
-    
+
     //Affichage jeu
     println!("   Minesweeper game \n");
-    //let white_square = "■";  
-    //let empty_square = "□";
     let mut row_count = 0;
-    print!("   0 1 2 3 4 5 6 7 11 12 13 14 15 16 17 18 19 20 \n");
+    let mut tens_count = 0;
+    print!("   ");
+    for col in &minesweeper_info.board {
+        if tens_count == 0 {
+            print!("  ");
+        } else {
+            print!(" {}", tens_count);
+        }
+        if row_count == 9 {
+            tens_count += 1;
+            row_count = 0;
+        } else {
+            row_count += 1;
+        }
+    }
+    row_count = 0;
+    print!("\n   ");
+    for col in &minesweeper_info.board {
+        print!(" {}", row_count);
+        if row_count == 9 {
+            row_count = 0;
+        } else {
+            row_count += 1;
+        }
+    }
+    print!("\n");
+    row_count = 0;
     for row in &minesweeper_info.board {
         print!("{}  ", row_count);
+        if row_count < 10 {
+            print!(" ");
+        }
         for col in 0..BOARD_SIZE {
             let cell = &row[col];
             if minesweeper_info.game_over || minesweeper_info.revealed.contains(&(row_count, col)) {
                 match cell {
                     Cell::Undiscovered => print!(". "),
-                    //Cell::Undiscovered => print!(" {} ", white_square),
                     Cell::Number(num) => {
                         // Appliquer des couleurs aux chiffres
                         let colored_number = match num {
@@ -39,20 +63,17 @@ pub fn print_board(minesweeper_info: &mut Minesweeper) {
                             print!("\x08\u{1F4A3} ");
                         } else {
                             print!(". "); // on cache les mines non révélées
-                            //print!(" {} ", white_square); // on cache les mines non révélées
                         }
                     }
                     Cell::Empty => print!("* "),
-                    // Cell::Empty => print!(" {} ", empty_square),
                     Cell::Mark => print!("\u{1F6A9}"),
                 }
             } else {
-                print!(". ");
-                //print!(" {} ", white_square); // on cache les mines non révélées
+                print!(". "); // on cache les mines non révélées
             }
         }
         if row_count == 2 {
-            print!("    Drapeau {}/{} ",minesweeper_info.num_mark, NUM_MINES)
+            print!("    Drapeau {}/{} ",minesweeper_info.num_mark, 10)
         }
         // TODO : créer une fonction pour centrer ces info par rapport à la grille
         println!();
