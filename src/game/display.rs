@@ -3,7 +3,15 @@ use termion::{color, style};
 
 use crate::game::{Cell, Minesweeper, BOARD_SIZE, NUM_MINES};
 
-pub fn print_board(minesweeper_info: &Minesweeper) {
+pub fn print_message_and_clear(minesweeper_info: &mut Minesweeper) {
+    if let Some(message) = &minesweeper_info.player_message {
+        println!("{}\n", message);
+        minesweeper_info.player_message = Some("".to_string()); // Réinitialisation à une chaîne vide
+    }
+}
+
+
+pub fn print_board(minesweeper_info: &mut Minesweeper) {
 
     clean_screen();
 
@@ -80,6 +88,7 @@ pub fn print_board(minesweeper_info: &Minesweeper) {
         row_count += 1;
     }
     println!();
+    print_message_and_clear(minesweeper_info);
 }
 
 pub fn print_menu() -> i32{
