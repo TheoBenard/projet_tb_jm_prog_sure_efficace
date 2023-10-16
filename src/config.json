@@ -3,22 +3,26 @@
     {
       "name": "Small",
       "board_size": 8,
-      "num_mines": 10
+      "num_mines": 10,
+      "index" : 2
     },
     {
       "name": "Medium",
       "board_size": 16,
-      "num_mines": 40
+      "num_mines": 40,
+      "index" : 3
     },
     {
       "name": "Large",
       "board_size": 32,
-      "num_mines": 160
+      "num_mines": 160,
+      "index" : 4
     },
     {
       "name": "Xtreme",
       "board_size": 16,
-      "num_mines": 246
+      "num_mines": 246,
+      "index" : 5
     }
   ]
 }

@@ -1,8 +1,7 @@
 mod game;
 
 fn main() {
-    println!("Welcome to Minesweeper!\n");
-    game::play();
+    game::main_game();
 }
 
 /*

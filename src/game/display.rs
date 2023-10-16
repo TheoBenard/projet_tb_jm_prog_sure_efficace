@@ -79,38 +79,106 @@ pub fn print_board(minesweeper_info: &Minesweeper) {
         println!();
         row_count += 1;
     }
+    // TODO : appel de la fonction qui affiche les erreurs.
     println!();
 }
 
 pub fn print_menu() -> i32{
-    clean_screen();
-    println!("  Welcome to the Minesweeper game !");
-    println!("Please press any key given below to continue :");
-    println!("1 : Minesweeper game rule and How to play.");
-    println!("2 : Small 8x8 grid with 10 mines.");
-    println!("3 : Medium 16x16 grid with 40 mines.");
-    println!("4 : Large 32x32 grid with 160 mines.");
-    println!("5 : Xtreme 16x16 grid with 246 mines. (test your luck).");
-    println!("Soon : configure your own grid");
+    let mut input_to_number : i32;
+    input_to_number = 0;
 
-    let mut input = String::new();
+    while input_to_number == 0 {
+        clean_screen();
+        println!("  Welcome to the Minesweeper game !");
+        println!("Please press any key given below to continue :");
+        println!("1 : Minesweeper game rule and How to play.");
+        println!("2 : Small 8x8 grid with 10 mines.");
+        println!("3 : Medium 16x16 grid with 40 mines.");
+        println!("4 : Large 32x32 grid with 160 mines.");
+        println!("5 : Xtreme 16x16 grid with 246 mines. (test your luck).");
+        println!("Soon : configure your own grid.");
+        println!("9 : Quit game.");
 
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Erreur lors de la lecture de l'entrée utilisateur.");
+        let mut input = String::new();
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Erreur lors de la lecture de l'entrée utilisateur.");
 
-    /*Deletion of spaces*/
-    let input = input.trim();
-    let input_to_number : i32;
+        /*Deletion of spaces*/
+        let input = input.trim();
 
-    /*Is the entry a number */
-    if input.chars().all(|c| c.is_digit(10)) {
-        input_to_number = input.parse().expect("Erreur de conversion en nombre.");
-        println!("Vous avez entré le nombre : {}", input_to_number);
-    } else {
-        println!("L'entrée n'est pas un nombre valide.");
+        /*Is the entry a number */
+        if input.chars().all(|c| c.is_digit(10)) {
+            input_to_number = input.parse().expect("Erreur de conversion en nombre.");
+            //println!("Vous avez entré le nombre : {}", input_to_number);
+        } else {
+            println!("L'entrée n'est pas un nombre valide.");
+        }
     }
-    0
+    input_to_number
+}
+
+
+pub fn print_game_rule() {
+    let mut input_to_number : i32;
+    input_to_number = 0;
+    let mut input_error : i32;
+    input_error = 0;
+
+    while input_to_number == 0 {
+        clean_screen();
+        println!("  Welcome to the game rule of the Minesweeper game !");
+        println!("  The goal of this game is to find every mines without clicking on them.");
+        println!("  You will be on a grid with undiscovered tiles.");
+        println!("  To begin the game you will need to enter the index of a row and then the index of a column. (EG : 1,3). This will be your first move.");
+        println!("  This move will uncover tiles and you will see some number appearing.");
+        println!("  Those number indicates that there is a mine near the tile where the number is. The tile where the mine is is 'touching' the tiles where the number is.");
+        println!("  If you want to uncover a tile where a mine is, then you lose. ");
+        println!("  To win, you will need to let uncovered the tile where you think the mines are. ");
+        println!("  To ease the things for you, you can mark the mines with a flag where you think the mines are. (Press a row then col with '!' for a flag ( EG : 1,3!))");
+        println!("  There is an example below :");
+        println!("  * * * ");
+        println!("  * 1 * ");
+        println!("  * * * ");
+        println!("   This '1' indicates that there is 1 mines in is peripherical tiles.");
+        println!("  . . . ");
+        println!("  . 1 . ");
+        println!("  . . \x08\u{1F4A3} ");
+        println!("  The mine is in the bellow right corner, so all of the other tiles are empty.");
+        println!("  There is an example with a 3 below : ");
+        println!("  * * * ");
+        println!("  * 3 * ");
+        println!("  * * * ");
+        println!("   This '1' indicates that there is 1 mines in is peripherical tiles.");
+        println!("   \x08\u{1F4A3}. . ");
+        println!("  . 1 . ");
+        println!("  . \x08\u{1F4A3} \x08\u{1F4A3} ");
+        println!("  You are ready, press 1 to get out of this menu.");
+        if input_error == 1 {
+            println!("You entered a wrong value.");
+            input_error = 0;
+        }
+
+        let mut input = String::new();
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Erreur lors de la lecture de l'entrée utilisateur.");
+        println!("{}", input);
+
+        /*Deletion of spaces*/
+        let input = input.trim();
+
+        /*Is the entry a number */
+        if input.chars().all(|c| c.is_digit(10)) {
+            input_to_number = input.parse().expect("Erreur de conversion en nombre.");
+            if input_to_number != 1 {
+                input_error = 1;
+                input_to_number = 0;
+            }
+        } else {
+            input_error = 1;
+        }
+    }
 }
 
 fn clean_screen() {

@@ -136,7 +136,7 @@ impl Minesweeper {
     }
 }
 
-pub fn play() {
+fn play() {
     let mut game_instance = Minesweeper::new();
     while !game_instance.game_over && !game_instance.check_win() {
 
@@ -211,5 +211,23 @@ pub fn play() {
         println!("Game Over! You hit a mine.");
     } else {
         println!("Congratulations! You won!");
+    }
+}
+
+pub fn main_game() {
+    let mut is_game_on : i32;
+    let mut user_menu_input : i32;
+    is_game_on = 1;
+
+    while is_game_on == 1 {
+        user_menu_input = display::print_menu();
+
+        if user_menu_input == 1 {
+            display::print_game_rule();
+        } else if user_menu_input == 9 {
+            is_game_on = 0;
+        } else {
+            play();
+        }
     }
 }
