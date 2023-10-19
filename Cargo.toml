@@ -9,3 +9,6 @@ edition = "2021"
 rand = "0.8"  # Pour la génération de nombres aléatoires
 crossterm = "0.27.0"
 termion = "1.5"
+serde = "1.0"
+serde_json = "1.0"
+serde_derive = "1.0"

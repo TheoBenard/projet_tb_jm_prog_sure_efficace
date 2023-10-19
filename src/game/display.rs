@@ -1,7 +1,7 @@
 use std::io;
 use termion::{color, style};
 
-use crate::game::{Cell, Minesweeper, BOARD_SIZE, NUM_MINES};
+use crate::game::{Cell, Minesweeper};
 
 pub fn print_message_and_clear(minesweeper_info: &mut Minesweeper) {
     if let Some(message) = &minesweeper_info.player_message {
@@ -9,7 +9,6 @@ pub fn print_message_and_clear(minesweeper_info: &mut Minesweeper) {
         minesweeper_info.player_message = Some("".to_string()); // Réinitialisation à une chaîne vide
     }
 }
-
 
 pub fn print_board(minesweeper_info: &mut Minesweeper) {
 
@@ -20,7 +19,7 @@ pub fn print_board(minesweeper_info: &mut Minesweeper) {
     let mut row_count = 0;
     let mut tens_count = 0;
     print!("   ");
-    for col in &minesweeper_info.board {
+    for _col in &minesweeper_info.board {
         if tens_count == 0 {
             print!("  ");
         } else {
@@ -35,7 +34,7 @@ pub fn print_board(minesweeper_info: &mut Minesweeper) {
     }
     row_count = 0;
     print!("\n   ");
-    for col in &minesweeper_info.board {
+    for _col in &minesweeper_info.board {
         print!(" {}", row_count);
         if row_count == 9 {
             row_count = 0;
@@ -50,7 +49,7 @@ pub fn print_board(minesweeper_info: &mut Minesweeper) {
         if row_count < 10 {
             print!(" ");
         }
-        for col in 0..BOARD_SIZE {
+        for col in 0..minesweeper_info.configuration.board_size {
             let cell = &row[col];
             if minesweeper_info.game_over || minesweeper_info.revealed.contains(&(row_count, col)) {
                 match cell {
@@ -81,7 +80,7 @@ pub fn print_board(minesweeper_info: &mut Minesweeper) {
             }
         }
         if row_count == 2 {
-            print!("    Drapeau {}/{} ",minesweeper_info.num_mark, NUM_MINES)
+            print!("    Drapeau {}/{} ",minesweeper_info.num_mark, minesweeper_info.configuration.num_mines)
         }
         // TODO : créer une fonction pour centrer ces info par rapport à la grille
         println!();
