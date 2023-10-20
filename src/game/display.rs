@@ -102,7 +102,7 @@ pub fn print_board(minesweeper_info: &mut Minesweeper) {
                             2 => format!("{}{}2{}", color::Fg(color::Yellow),      style::Bold, style::Reset),
                             3 => format!("{}{}3{}", color::Fg(color::LightYellow), style::Bold, style::Reset),
                             4 => format!("{}{}4{}", color::Fg(color::LightRed),    style::Bold, style::Reset),
-                            5 => format!("{}{}5{}", color::Fg(color::Black),       style::Bold, style::Reset),
+                            5 => format!("{}{}5{}", color::Fg(color::Red),         style::Bold, style::Reset),
                             6 => format!("{}{}6{}", color::Fg(color::Magenta),     style::Bold, style::Reset),
                             _ => num.to_string(), // chiffres non colorés
                         };
