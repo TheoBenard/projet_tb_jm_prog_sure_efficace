@@ -19,10 +19,22 @@ use crate::game::Config;
  *  Fonction pour lire la saisie du joueur
  */
 pub fn read_user_input(input: &mut String) {
-        // on récupère la saisie du joueur
-        io::stdin()                                // on lit l'entrée standard écrit par le joueur
-        .read_line(input)      // on stocke la chaine mutable dans input
-        .expect("Failed to read input.");          // on affiche un message si il y a une erreur
+        loop {
+                // on récupère la saisie du joueur
+                let result = io::stdin().read_line(input);
+
+                match result {
+                        Ok(_) => {
+                                // on sort de la boucle, la saisie a été lue avec succès.
+                                break;
+                        }
+                        Err(error) => {
+                                // on affiche un message d'erreur, une erreur s'est produite.
+                                eprintln!("Failed to read input: {}", error);
+                                continue;
+                        }
+                }
+        }
 }
 
 /*
@@ -37,4 +49,4 @@ pub fn read_config_from_file(file_path: &str) -> Result<Config, Box<dyn std::err
         let config: Config = serde_json::from_reader(reader)?;
         // on retourne la configuration lue depuis le fichier.
         Ok(config)
-    }
+}

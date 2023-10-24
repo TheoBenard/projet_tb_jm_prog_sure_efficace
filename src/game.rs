@@ -378,7 +378,13 @@ pub fn play(game_config : BoardInfo) {
         if game_instance.check_win() { // on vérifie si le joueur a découvert toutes les cases.
             display::print_board(&mut game_instance); // on affiche le tableau de jeu.
             // on mesure le temps écoulé depuis le point de départ.
-            let elapsed_time = start_time.unwrap().elapsed();
+            let elapsed_time = match start_time {
+                Some(start) => start.elapsed(),
+                None => {
+                    // on gère le cas où `start_time` est `None` (non initialisé)
+                    std::time::Duration::new(0, 0)
+                }
+            };
             println!("Congratulations ! You won ! \u{1F389}"); // on informe le joueur qu'il a gagné.
             // on affiche le temps que le joueur a passé dans un format lisible.
             println!("   Your time is {:02}:{:02}:{:03}\n", elapsed_time.as_secs() / 60, elapsed_time.as_secs() % 60, elapsed_time.subsec_millis());
@@ -441,15 +447,18 @@ pub fn main_game() {
     };
 
     // IA : on trouve l'index maximal parmi les modes de jeu définis dans la configuration.
-    let max_index = config.game_modes.iter().map(|mode| mode.index).max().unwrap_or(0);
-
+    let max_index = match config.game_modes.iter().map(|mode| mode.index).max() {
+        Some(max_index) => max_index as u32,
+        None => 0,
+    };
+    
     while is_game_on {
         // on affiche le menu et recueille l'entrée du joueur.
         user_menu_input = display::print_menu();
-
+        
         if user_menu_input <= max_index {
             if user_menu_input == 1 {
-                // on affiche les règles du jeu
+                // on affiche les règles du jeu.
                 display::print_game_rule();
             } else {
                 // on recherche le mode de jeu sélectionné dans la configuration.
